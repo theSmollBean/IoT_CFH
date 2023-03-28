@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="raphael-2.1.4.min.js"></script>
+<script src="justgage.js"></script>
+
+<script>
+var accessToken = "37d119fef414cd9b3b6a2cca12e0ab4b0df17bd2";
+var deviceID = "1d0026000d47373334323233"
+var url = "https://api.particle.io/v1/devices/" + deviceID + "/gradosC";
+var urlF = "https://api.particle.io/v1/devices/" + deviceID + "/gradosF";
+var urlH = "https://api.particle.io/v1/devices/" + deviceID + "/humedad";
+
+function callbackC(data, status){
+	if (status == "success") {
+		temp = parseFloat(data.result);
+		temp = temp.toFixed(2);
+		g.refresh(temp);
+		setTimeout(getReading, 1000);
+	}
+	else {
+		alert("There was a problem");
+	}
+
+}
+function callbackF(data, status){
+	if (status == "success") {
+		tempF = parseFloat(data.result);
+		tempF = tempF.toFixed(2);
+		f.refresh(tempF);
+		setTimeout(getReading, 1000);
+	}
+	else {
+		alert("There was a problem");
+	}
+
+}function callbackH(data, status){
+	if (status == "success") {
+		hum = parseFloat(data.result);
+		hum = hum.toFixed(2);
+		h.refresh(hum);
+		setTimeout(getReading, 1000);
+	}
+	else {
+		alert("There was a problem");
+	}
+
+}
+function getReadingC(){
+   	$.get(url, {access_token: accessToken}, callbackC);
+}
+function getReadingF(){
+	$.get(urlF, {access_token: accessToken}, callbackF);
+}
+function getReadingH(){
+	$.get(urlH, {access_token: accessToken}, callbackH);
+}
+</script>
+<style>
+	div{
+		display: inline-block;
+		align-items: center;
+	}
+</style>
+</head>	
+
+<body>
+<div id="celsius" class="1000x1060px"></div>
+<div id="fahrenheit" class="1000x1060px"></div>
+<div id="humedad" class="1000x1060px"></div>
+<script>
+var g = new JustGage({
+    id: "celsius",
+    value: 0,
+    min: 0,
+    max: 100,
+    title: "Temperatura (C)"
+});
+getReadingC();
+
+
+var f = new JustGage({
+    id: "fahrenheit",
+    value: 0,
+    min: 0,
+    max: 100,
+    title: "Temperatura (F)"
+});
+getReadingF();
+
+
+var h = new JustGage({
+    id: "humedad",
+    value: 0,
+    min: 0,
+    max: 100,
+    title: "Humedad (%)"
+});
+getReadingH();
+
+</script>
+
+</body>
+</html>
